@@ -1,0 +1,110 @@
+@import url("https://fonts.googleapis.com/css2?family=Oregano&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: #eed3a5;
+}
+header {
+  height: 120px;
+  background: url(Banner.png);
+  background-size: cover;
+  margin-top: -30px;
+}
+.title {
+  text-align: center;
+  font-family: "Oregano", cursive;
+  font-size: 40px;
+}
+.subtitle {
+  text-align: center;
+  font-family: "Oregano", cursive;
+  font-size: 20px;
+}
+.contenedor {
+  display: flex;
+  justify-content: center;
+}
+
+#logo {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+input {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 230px;
+  height: 25px;
+  border-radius: 10px;
+  border: none;
+  margin: 8px 0;
+  background-color: #ededed;
+  color: black;
+  font-family: "Oregano", cursive;
+  letter-spacing: 1pt;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 230px;
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  margin: 15px 0;
+  background-color: #bc3551;
+  color: white;
+  font-family: "Oregano", cursive;
+  letter-spacing: 1pt;
+}
+#googleLogin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 230px;
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  margin: 15px 0;
+  color: white;
+  font-family: "Oregano", cursive;
+  background: url(google.png);
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-color: #bc3551;
+  background-position: 8%;
+  letter-spacing: 1pt;
+}
+a {
+  color: #bc3551;
+  font-family: "Oregano", cursive;
+  float: right;
+  margin: 40px 0;
+  text-decoration: underline;
+}
+.frase {
+  font-family: "Oregano", cursive;
+  float: left;
+  margin: 40px 0;
+  letter-spacing: 1pt;
+}
