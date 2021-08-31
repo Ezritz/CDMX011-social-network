@@ -1,51 +1,30 @@
-import { Home } from './components/Home.js';
+import { Home } from '../components/Home.js';
+import { render } from "./rend.js";
+import { Login } from "./components/Login.js";
 import { Register } from './components/Register.js';
-import { Login } from './components/Login.js';
-
-const rootDiv = document.getElementById('root');
-
+//eslint-disable-next-line import/no-cycle
 // Routes
 const routes = {
-  '/': Home,
+  '/wall': Home,
+  '/': Login,
   '/register': Register,
-  '/login': Login,
 };
+
+const dispatchRoute = (pathname = '/') => {
+  const root = document.getElementById('root');
+  const component = routes[pathname];
+  render(root, component());
+};
+
+window.addEventListener('load', () => {
+  dispatchRoute('/');
+});
 
 export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
-  window.history.pushState(
-    {}, // lo que contiene el estado
-    pathname,
-    window.location.origin + pathname,
-  );
-  while (rootDiv.firstChild) {
-    rootDiv.removeChild(rootDiv.firstChild);
-  }
-
-  rootDiv.appendChild(routes[pathname]());
-  registerButtons(pathname);
+  window.history.pushState({}, pathname, window.location.origin + pathname);
+  dispatchRoute(pathname);
 };
 
-const registerButtons = (pathname) => {
-  switch (pathname) {
-    case '/register':
-      console.log('registro');
-      document.getElementById('is').addEventListener('click', () => onNavigate('/'));
-      document.getElementById('registro').addEventListener('click', () => onNavigate('/register'));
-      break;
-    default:
-      console.log('default');
-      document.getElementById('registro').addEventListener('click', () => onNavigate('/register'));
-      document.getElementById('is').addEventListener('click', () => onNavigate('/login'));
-      break;
-  }
-};
-
-const component = routes[window.location.pathname];
-window.onpopstate = () => {
-  rootDiv.appendChild(component());
-};
-
-rootDiv.appendChild(component());
-registerButtons(window.location.pathname);
-
-// myFunction();
+window.addEventListener('popstate', () => {
+  dispatchRoute(window.location.pathname);
+});

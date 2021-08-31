@@ -1,34 +1,22 @@
 export const Register = () => {
-  const HomeDiv = document.createElement('div');
-  const HomeForm = document.createElement('form');
-  // HomeDiv.textContent = 'Registro';
-  const aHome = document.createElement('a');
-  const buttonRegister = document.createElement('button');
-  const frase2 = document.createElement('p');
-  const inputEmail = document.createElement('input');
-  const inputPassword = document.createElement('input');
+  const container = document.createElement('div');
+  
+  const html = `<main>
+  <section class="contenedor"><img src="sweatshirt.png" alt="Logo" id="logo"></section>
+  <h1 class="title">Trueque</h1> <br>
+  <p class="subtitle">La comunidad mas grande <br>
+  de intercambio de ropa</p>
+  <form method="POST" id="signIn">
+    <input type="email" id="userEmail" placeholder="alguien@example.com">
+    <input type="password" id="userPassword" placeholder="Contraseña">
+    <button id="registro">Registrate</button>
+    
+    <p class="frase">¿Tienes una cuenta? </p>
+    <a href="" id="login">Inicia Sesion</a>
+  </form>
+  </main>`;
 
-  inputEmail.type = 'email';
-  inputEmail.id = 'email';
-  inputEmail.placeholder = 'alguien@example.com';
-  inputPassword.type = 'password';
-  inputPassword.id = 'password';
-  inputPassword.placeholder = 'Contraseña';
-  buttonRegister.textContent = 'Registrate';
-  buttonRegister.id = 'registro';
-  buttonRegister.className = 'button';
-  aHome.textContent = 'Inicia Sesión';
-  aHome.className = 'frase';
-  aHome.id = 'is';
-  frase2.textContent = '¿Tienes una cuenta? ';
-  frase2.className = 'frase';
-
-  HomeDiv.appendChild(inputEmail);
-  HomeDiv.appendChild(inputPassword);
-  HomeDiv.appendChild(buttonRegister);
-  HomeDiv.appendChild(frase2);
-  HomeDiv.appendChild(aHome);
-  HomeForm.appendChild(HomeDiv);
-
-  return HomeForm;
+  container.innerHTML = html;
+  
+  return container;
 };
