@@ -3,4 +3,4 @@ export function render(target, element) {
     target.removeChild(target.lastChild);
   }
   target.appendChild(element);
-};
+}

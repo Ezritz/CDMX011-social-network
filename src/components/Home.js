@@ -1,13 +1,22 @@
-import { getUser } from "../firebaseClient.js";
+import { getUser, verifyUser } from '../firebaseClient.js';
 
 export const Home = () => {
-  const user = getUser()
+  const user = getUser();
   const container = document.createElement('div');
-
-  const html = `
-  <h2>Hola ${user ? user.email : ''}</h2>
-  `;
-  
+    let html;
+    console.log('user: ', user);
+  if (user.emailVerified) {
+    html = `
+    <h2>Hola ${user ? user.email : ''}</h2>
+    `;
+    
+  }
+  else {
+    verifyUser(user);
+    html = `
+    <p>Please verify your email in your email account</p>
+    `;
+  }
   container.innerHTML = html;
   return container;
 };

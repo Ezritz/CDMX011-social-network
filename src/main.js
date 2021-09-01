@@ -1,8 +1,8 @@
-import { Home } from '../components/Home.js';
-import { render } from "./rend.js";
-import { Login } from "./components/Login.js";
+import { Home } from './components/Home.js';
+import { render } from './rend.js';
+import { Login } from './components/Login.js';
 import { Register } from './components/Register.js';
-//eslint-disable-next-line import/no-cycle
+// eslint-disable-next-line import/no-cycle
 // Routes
 const routes = {
   '/wall': Home,
@@ -17,7 +17,7 @@ const dispatchRoute = (pathname = '/') => {
 };
 
 window.addEventListener('load', () => {
-  dispatchRoute('/');
+  dispatchRoute(window.location.pathname);
 });
 
 export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
