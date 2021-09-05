@@ -52,13 +52,18 @@ input {
   font-family: "Oregano", cursive;
   letter-spacing: 1pt;
 }
-#root {
+.father{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/* #root {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-}
+}*/
 button {
   display: flex;
   flex-direction: column;
@@ -108,3 +113,8 @@ a {
   margin: 40px 0;
   letter-spacing: 1pt;
 }
+#headerWall{
+  background: #bc355048;
+  background-image: none;
+}
+

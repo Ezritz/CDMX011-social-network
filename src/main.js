@@ -10,15 +10,28 @@ const routes = {
   '/register': Register,
 };
 
+
+firebase.auth().onAuthStateChanged((user) => {
+  let pathname = window.location.pathname;
+  if (user) {
+    if (pathname === '/' || pathname === '/register') {
+      pathname = '/wall';
+    }
+  }else{
+    pathname = '/';
+  }
+  onNavigate(pathname);
+});
+
 const dispatchRoute = (pathname = '/') => {
   const root = document.getElementById('root');
   const component = routes[pathname];
   render(root, component());
 };
 
-window.addEventListener('load', () => {
+/* window.addEventListener('load', () => {
   dispatchRoute(window.location.pathname);
-});
+});*/
 
 export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
   window.history.pushState({}, pathname, window.location.origin + pathname);
