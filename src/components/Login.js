@@ -7,10 +7,12 @@ export const Login = () => {
   const html = `
   <header></header>
   <div class="father">
-    <section class="contenedor"><img src="sweatshirt.png" alt="Logo" id="logo"></section>
-    <h1 class="title">Trueque</h1> <br>
-    <p class="subtitle">La comunidad mas grande <br>
-    de intercambio de ropa</p>
+    <div class="divChild">
+      <section class="contenedor"><img src="sweatshirt.png" alt="Logo" id="logo"></section>
+      <h1 class="title">Trueque</h1>
+      <p class="subtitle">La comunidad mas grande <br>
+      de intercambio de ropa</p>
+    </div>
     <main>
     <form method="POST" id="signIn">
       <input type="email" id="userEmail" placeholder="alguien@example.com" required="required"/>

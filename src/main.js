@@ -10,8 +10,25 @@ const routes = {
   '/register': Register,
 };
 
+const dispatchRoute = (pathname = '/') => {
+  const root = document.getElementById('root');
+  const component = routes[pathname];
+  render(root, component());
+};
 
+/* window.addEventListener('load', () => {
+  console.log('dispatch');
+  dispatchRoute(window.location.pathname);
+});*/
+
+export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
+  window.history.pushState({}, pathname, window.location.origin + pathname);
+  dispatchRoute(pathname);
+};
+
+// Mantener la sesión activa
 firebase.auth().onAuthStateChanged((user) => {
+  console.log('1');
   let pathname = window.location.pathname;
   if (user) {
     if (pathname === '/' || pathname === '/register') {
@@ -22,21 +39,6 @@ firebase.auth().onAuthStateChanged((user) => {
   }
   onNavigate(pathname);
 });
-
-const dispatchRoute = (pathname = '/') => {
-  const root = document.getElementById('root');
-  const component = routes[pathname];
-  render(root, component());
-};
-
-/* window.addEventListener('load', () => {
-  dispatchRoute(window.location.pathname);
-});*/
-
-export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
-  window.history.pushState({}, pathname, window.location.origin + pathname);
-  dispatchRoute(pathname);
-};
 
 window.addEventListener('popstate', () => {
   dispatchRoute(window.location.pathname);

@@ -1,4 +1,5 @@
-import { getUser, verifyUser } from '../firebaseClient.js';
+import { getUser, verifyUser, signOut } from '../firebaseClient.js';
+import { onNavigate } from '../main.js';
 
 const db = firebase.firestore();
 export const Home = () => {
@@ -7,26 +8,22 @@ export const Home = () => {
   const container = document.createElement('div');
   let html;
   
-  
   if (currentUser.emailVerified) {
     html = `
     <header id="headerWall">
     <a href="" id="exit">Cerrar Sesion</a>
     </header>
     <div class="father">
-    <h2>Hola ${currentUser ? currentUser.email : ''}</h2> <br>
-    <main>
-    <form method="POST" id="wallForm">
-      <input type="text" id="toPost" placeholder="Que deseas publicar hoy?" autofocus>
-      <button id="confirmPost">Publicar</button>
-      <input type="text" id="publication">
-      <a href="" id="edit">Editar</a>
-      <button>Borrar</button>
-      <label for="like"></label>
-      <button>MG</button>
-    </form>
-    <div id="postContainer"></div>
-    </main>
+      <div class="divChild">
+        <h2 class="subtitle">Hola ${currentUser ? currentUser.email : ''}</h2> <br>
+      </div>
+      <main>
+      <form method="POST" id="wallForm">
+        <input type="text" id="toPost" placeholder="Que deseas publicar hoy?">
+        <a href="" id="confirmPost">Publicar</a>
+      </form>
+      <div id="postContainer"></div>
+      </main>
     </div>`;
   }
   else {
@@ -38,6 +35,19 @@ export const Home = () => {
   container.innerHTML = html;
 
   const collection = db.collection('posts');
+  const wallF = document.getElementById('wallForm');
+
+  container.querySelector('#exit').addEventListener('click', (e) => {
+    e.preventDefault();
+    signOut()
+    .then (() => {
+
+    })
+    .catch((error) =>{
+      alert('Error: ', error.message);
+    });
+    onNavigate('/');
+  });
 
   container.querySelector('#confirmPost').addEventListener('click', (e) => {
     e.preventDefault();
@@ -51,6 +61,7 @@ export const Home = () => {
         post,
       })
       .then(() => {
+        document.querySelector('#toPost').value = '';
         console.log('Document succesfully written');
       })
       .catch((error) => {
@@ -58,6 +69,35 @@ export const Home = () => {
       });
     }
   });
-  
+
+  const postContainer = container.querySelector('#postContainer');
+  const deleteDataFire = id => db.collection('posts').doc(id).delete();
+  collection.onSnapshot((querySnapshot) => {
+    postContainer.innerHTML ='';
+    querySnapshot.forEach((doc) => {
+      const dataFire = doc.data();
+      dataFire.id = doc.id;
+      console.log(dataFire);
+      postContainer.innerHTML += `
+      <div id="contPub">
+        ${dataFire.post}
+        <div>
+          <a href="" id="edit">Editar</a>
+          <button id="btnDelete" data-id="${dataFire.id}">Borrar</button>
+          <label for="like"></label>
+          <button id="count">MG</button>
+        </div>
+      </div>`;
+
+      const butDelete = document.querySelectorAll('#btnDelete');
+      butDelete.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          console.log(e.target.dataset.id);
+          deleteDataFire(e.target.dataset.id);
+        });
+      });
+    });
+  });
   return container;
 };

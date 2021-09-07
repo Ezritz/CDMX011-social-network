@@ -6,20 +6,24 @@ export const Register = () => {
 
   const html = `
   <header></header>
-  <section class="contenedor"><img src="sweatshirt.png" alt="Logo" id="logo"></section>
-  <h1 class="title">Trueque</h1> <br>
-  <p class="subtitle">La comunidad mas grande <br>
-  de intercambio de ropa</p>
-  <main>
-  <form method="POST" id="signIn">
-    <input type="email" id="userEmail" placeholder="alguien@example.com" required="required">
-    <input type="password" id="userPassword" placeholder="Contraseña" required="required">
-    <button id="registro">Registrate</button>
-    
-    <p class="frase">¿Tienes una cuenta? </p>
-    <a href="" id="login">Inicia Sesion</a>
-  </form>
-  </main>`;
+  <div class="father">
+    <div class="divChild">
+      <section><img src="sweatshirt.png" alt="Logo" id="logo"></section>
+      <h1 class="title">Trueque</h1>
+      <p class="subtitle">La comunidad mas grande <br>
+      de intercambio de ropa</p>
+    </div>
+    <main>
+    <form method="POST" id="signIn">
+      <input type="email" id="userEmail" placeholder="alguien@example.com" required="required">
+      <input type="password" id="userPassword" placeholder="Contraseña" required="required">
+      <button id="registro">Registrate</button>
+      
+      <p class="frase">¿Tienes una cuenta? </p>
+      <a href="" id="login">Inicia Sesion</a>
+    </form>
+    </main>
+  <div>`;
 
   container.innerHTML = html;
 
