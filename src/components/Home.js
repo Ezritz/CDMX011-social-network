@@ -14,16 +14,13 @@ export const Home = () => {
     <a href="" id="exit">Cerrar Sesion</a>
     </header>
     <div class="father">
-      <div class="divChild">
-        <h2 class="subtitle">Hola ${currentUser ? currentUser.email : ''}</h2> <br>
-      </div>
-      <main>
+      <h2 class="subtitle">Hola ${currentUser ? currentUser.email : ''}</h2> <br>
       <form method="POST" id="wallForm">
         <input type="text" id="toPost" placeholder="Que deseas publicar hoy?">
         <a href="" id="confirmPost">Publicar</a>
       </form>
       <div id="postContainer"></div>
-      </main>
+      
     </div>`;
   }
   else {
@@ -35,8 +32,9 @@ export const Home = () => {
   container.innerHTML = html;
 
   const collection = db.collection('posts');
-  const wallF = document.getElementById('wallForm');
+  // const wallF = document.getElementById('wallForm');
 
+  // SIGN OUT
   container.querySelector('#exit').addEventListener('click', (e) => {
     e.preventDefault();
     signOut()
@@ -49,9 +47,12 @@ export const Home = () => {
     onNavigate('/');
   });
 
-  container.querySelector('#confirmPost').addEventListener('click', (e) => {
+  // FIREBASE CONNECT
+  container.querySelector('#confirmPost').addEventListener('click', (e) => { //SEND POST TO FIREBASE
     e.preventDefault();
     const post = document.querySelector('#toPost').value;
+    const likes = 0;
+    const alikes = [];
     if(post === ''){
       // document.getElementById('confirmPost').disabled = true;
       alert('No se permiten espacios vacíos');
@@ -59,6 +60,8 @@ export const Home = () => {
     else{
       collection.add({
         post,
+        likes,
+        alikes,
       })
       .then(() => {
         document.querySelector('#toPost').value = '';
@@ -72,20 +75,35 @@ export const Home = () => {
 
   const postContainer = container.querySelector('#postContainer');
   const deleteDataFire = id => db.collection('posts').doc(id).delete();
-  collection.onSnapshot((querySnapshot) => {
+
+  collection.onSnapshot((querySnapshot) => { // PULL POST AND ADD IN REAL TIME
     postContainer.innerHTML ='';
     querySnapshot.forEach((doc) => {
       const dataFire = doc.data();
+      
       dataFire.id = doc.id;
       console.log(dataFire);
+      console.log(dataFire.alikes.length);
       postContainer.innerHTML += `
       <div id="contPub">
         ${dataFire.post}
-        <div>
-          <a href="" id="edit">Editar</a>
-          <button id="btnDelete" data-id="${dataFire.id}">Borrar</button>
-          <label for="like"></label>
-          <button id="count">MG</button>
+        <div id="btnsContenedor">
+          <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
+          <button id="btnDelete" data-id='${dataFire.id}'>Borrar</button>
+          <div class="likes">
+            <span id="counter" >${dataFire.alikes.length}</span>
+            <button id="like" data-id='${dataFire.id}'><3</button>
+          </div>
+        </div>
+      </div>
+      
+      <div id="modalWindow">
+        <div id="modalContainer">
+          <div id="closeModal">
+            <span class="close" id="closeX">&times;</span>
+          </div>
+          <input type="text" id="editInput">
+          <button id="editBtnPost" data-id='${dataFire.id}'>Editar</button>
         </div>
       </div>`;
 
@@ -95,6 +113,65 @@ export const Home = () => {
           e.preventDefault();
           console.log(e.target.dataset.id);
           deleteDataFire(e.target.dataset.id);
+        });
+      });
+
+      document.querySelectorAll('#like').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          
+          const target = e.target;
+          const alikes = dataFire.alikes;
+          if (!alikes.includes(currentUser.email)){
+            collection.doc(target.dataset.id)
+            .update({
+              alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
+            });
+          }else{
+            collection.doc(target.dataset.id)
+            .update({
+              alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
+            });
+          }
+          
+        });
+      });
+      // Post Edit
+      document.querySelectorAll('#edit').forEach((btnE) => {
+        btnE.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.getElementById('modalWindow').style.display ='block';
+
+          const target = e.target;
+          collection.doc(target.dataset.id)
+            .get()
+            //eslint-disable-next-line no-shadow
+            .then((doc) => {
+              const dataEdit = doc.data();
+              document.getElementById('editInput').value = dataEdit.post;
+            })
+            .catch((error) => {
+              console.log('error getting document: ',error.message);
+            });
+          document.getElementById('editBtnPost').addEventListener('click',() => {
+            //eslint-disable-next-line no-shadow
+            const target = e.target;
+            const post = document.querySelector('#editInput').value;
+
+            collection.doc(target.dataset.id)
+              .update({
+                post,
+              })
+              .then (() =>{
+                console.log('Document succesfully Updated');
+              })
+              .catch((error) => {
+                console.log('Error updating document: ',error.message);
+              });
+          });
+
+          document.getElementById('closeX').addEventListener('click', () =>{
+            document.getElementById('modalWindow').style.display = 'none';
+          });
         });
       });
     });
