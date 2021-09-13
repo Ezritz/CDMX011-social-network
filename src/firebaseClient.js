@@ -1,5 +1,6 @@
 import { firebaseConfig } from './firebase.config.js'
   // Initialize Firebase
+
 firebase.initializeApp(firebaseConfig);
 
 export const signIn = (email, password) => firebase.auth()
