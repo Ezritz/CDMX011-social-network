@@ -17,6 +17,7 @@ export const Login = () => {
     <form method="POST" id="signIn">
       <input type="email" id="userEmail" placeholder="alguien@example.com" required="required"/>
       <input type="password" id="userPassword" placeholder="Contraseña" required="required"/>
+      <p id="errorMessage"></p>
       <button id="login">Inicia Sesion</button>
       <button id="googleLogin">Iniciar Sesion con Google</button>
       <p class="frase">¿No tienes una cuenta?</p>
@@ -31,11 +32,14 @@ export const Login = () => {
     e.preventDefault();
     const email = container.querySelector('input[type=email]').value;
     const password = container.querySelector('input[type=password]').value;
+    const errorM = container.querySelector('#errorMessage');
     console.log(email, password);
     signIn(email, password)
       .then(() => onNavigate('/wall'))
       .catch((error) => {
-        alert('error: Debes ingresar los datos ', error.message);
+        // alert('error: Debes ingresar los datos ', error.message);
+        errorM.innerHTML = 'Usuario o contraseña no validos';
+        error;
       });
     console.log('singning');
   });

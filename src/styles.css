@@ -5,6 +5,7 @@
 }
 body {
   background: #eed3a5;
+  font-family: "Oregano", cursive;
 }
 header {
   height: 120px;
@@ -62,7 +63,7 @@ input {
 
 #toPost{
   background: #D8BA86;
-  width: 100%;
+  width: 95%;
   height: 50px;
   border-radius: 13px;
   outline: none;
@@ -131,8 +132,28 @@ a {
   letter-spacing: 1pt;
 }
 #headerWall{
-  background: #bc355048;
+  display: flex;
+  margin-top: 0px;
+  height: 90px;
+  background-color: #bc355049;
   background-image: none;
+  justify-content: space-around;
+}
+#logoWall {
+  margin-top: 10px;
+  width: 70px;
+  height: 70px;
+}
+
+.titleWall{
+  margin-top: 30px;
+  margin-left: -30px;
+  font-size: 35px;
+  font-family: "Oregano", cursive;
+}
+
+#exit{
+  margin-top: 60px;
 }
 
 #postContainer {
@@ -140,6 +161,16 @@ a {
   flex-direction: column;
   text-align: center;
   width: 95%;
+}
+
+#toPostContainer {
+  display: flex;
+  flex-direction: column;
+  width: 95%;
+}
+#confirmPost{
+  font-size: 18px;
+  margin: 10px
 }
 
 #contPub {
@@ -155,7 +186,7 @@ a {
   text-align: justify;
 }
 #btnDelete {
-  width: 40px;
+  width: 20px;
   height: 20px;
 }
 
@@ -223,6 +254,19 @@ span {
   border: none;
   outline: none;
 }
+
+#editBtnPost {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  width: 100px;
+  height: 20px;
+  border-radius: 10px;
+  border: none;
+  
+}
 @keyframes modal{
   from {top: 0px;}
   to {top: 200px;}
@@ -231,16 +275,16 @@ span {
 .likes {
   margin: 10px;
   text-align: center;
-  justify-content: space-between;
-  display: inline-block;
+  display: flex;
+  flex-direction: row;
 }
 
 #like {
-  width: 40px;
+  width: 20px;
   height: 20px;;
 }
 
 #counter {
   display: flex;
-  position: fixed;
+  margin-top: 5px;
 }

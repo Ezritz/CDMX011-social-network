@@ -11,13 +11,17 @@ export const Home = () => {
   if (currentUser.emailVerified) {
     html = `
     <header id="headerWall">
+    <img id="logoWall" src="./sweatshirt.png">
+    <h2 class="titleWall">Trueque</h2>
     <a href="" id="exit">Cerrar Sesion</a>
     </header>
     <div class="father">
       <h2 class="subtitle">Hola ${currentUser ? currentUser.email : ''}</h2> <br>
       <form method="POST" id="wallForm">
+      <div id="toPostContainer">
         <input type="text" id="toPost" placeholder="Que deseas publicar hoy?">
         <a href="" id="confirmPost">Publicar</a>
+      </div>
       </form>
       <div id="postContainer"></div>
       
@@ -83,16 +87,16 @@ export const Home = () => {
       
       dataFire.id = doc.id;
       console.log(dataFire);
-      console.log(dataFire.alikes.length);
+      console.log("alikes: ",dataFire.alikes.length);
       postContainer.innerHTML += `
       <div id="contPub">
         ${dataFire.post}
         <div id="btnsContenedor">
           <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
-          <button id="btnDelete" data-id='${dataFire.id}'>Borrar</button>
+          <img id="btnDelete" src="./eliminar.png" data-id='${dataFire.id}'>
           <div class="likes">
-            <span id="counter" >${dataFire.alikes.length}</span>
-            <button id="like" data-id='${dataFire.id}'><3</button>
+            <img id="like" src="./corazon.png" data-id='${dataFire.id}'>
+            <span id="counter">${dataFire.alikes.length}</span>
           </div>
         </div>
       </div>
@@ -118,20 +122,28 @@ export const Home = () => {
 
       document.querySelectorAll('#like').forEach((btn) => {
         btn.addEventListener('click', (e) => {
-          
+          console.log('like');
           const target = e.target;
-          const alikes = dataFire.alikes;
-          if (!alikes.includes(currentUser.email)){
-            collection.doc(target.dataset.id)
-            .update({
-              alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
-            });
-          }else{
-            collection.doc(target.dataset.id)
-            .update({
-              alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
-            });
-          }
+          // const alikes = dataFire.alikes;
+          
+          let docRef = collection.doc(target.dataset.id);
+          docRef.get().then((doc) => {
+            console.log('doc alikes; ', doc.data().alikes);
+            if (!doc.data().alikes.includes(currentUser.email)){
+
+              docRef
+              .update({
+                alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
+              });
+              console.log('+1 like');
+            }
+            else {
+              docRef
+              .update({
+                alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
+              });
+            }
+          })
           
         });
       });
