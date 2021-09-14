@@ -20,7 +20,9 @@ export const Home = () => {
       <form method="POST" id="wallForm">
       <div id="toPostContainer">
         <input type="text" id="toPost" placeholder="Que deseas publicar hoy?">
-        <a href="" id="confirmPost">Publicar</a>
+        <div id= "divPub">
+          <a href="" id="confirmPost">Publicar</a>
+        </div>
       </div>
       </form>
       <div id="postContainer"></div>
@@ -30,13 +32,12 @@ export const Home = () => {
   else {
     verifyUser(currentUser);
     html = `
-    <p>Please verify your email in your email account</p>
+    <p>Enviamos una liga a tu correo para verificarlo</p>
     `;
   }
   container.innerHTML = html;
 
   const collection = db.collection('posts');
-  // const wallF = document.getElementById('wallForm');
 
   // SIGN OUT
   container.querySelector('#exit').addEventListener('click', (e) => {
@@ -58,7 +59,6 @@ export const Home = () => {
     const likes = 0;
     const alikes = [];
     if(post === ''){
-      // document.getElementById('confirmPost').disabled = true;
       alert('No se permiten espacios vacíos');
     }
     else{
@@ -125,7 +125,6 @@ export const Home = () => {
           console.log('like');
           const target = e.target;
           // const alikes = dataFire.alikes;
-          
           let docRef = collection.doc(target.dataset.id);
           docRef.get().then((doc) => {
             console.log('doc alikes; ', doc.data().alikes);

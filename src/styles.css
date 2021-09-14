@@ -60,13 +60,19 @@ input {
   flex-wrap: wrap;
   justify-content: center;
 }
-
+.formulario {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  text-align: center;
+}
 #toPost{
-  background: #D8BA86;
-  width: 95%;
-  height: 50px;
+  background: transparent;
+  width: 70%;
+  padding: 10px;
   border-radius: 13px;
   outline: none;
+  font-size: 15px;
 }
 #wallForm {
   display: flex;
@@ -165,9 +171,18 @@ a {
 
 #toPostContainer {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   width: 95%;
+  margin: 20px;
+  
+  background: #D8BA86;
+  border-radius: 15px;
 }
+#divPub{
+  padding: 10px;
+  width: fit-content;
+}
+
 #confirmPost{
   font-size: 18px;
   margin: 10px
@@ -178,12 +193,13 @@ a {
   justify-content: space-between;;
   background: #D8BA86;
   padding: 10px;
-  height: auto;
   font-size: 20px;
   border-radius: 13px;
   border: none;
   margin: 5px;
   text-align: justify;
+  max-height: 200px;
+  overflow: scroll;
 }
 #btnDelete {
   width: 20px;
@@ -287,4 +303,13 @@ span {
 #counter {
   display: flex;
   margin-top: 5px;
+}
+
+#divError{
+  display: none;
+  width: 90%;
+  text-align: center;
+  background-color: #f5e2c9;
+  border-radius: 10px;
+  padding: 5px;
 }

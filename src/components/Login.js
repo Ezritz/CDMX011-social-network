@@ -12,12 +12,14 @@ export const Login = () => {
       <h1 class="title">Trueque</h1>
       <p class="subtitle">La comunidad mas grande <br>
       de intercambio de ropa</p>
+      <div id="divError">
+        <p id="errorMessage"></p>
+      </div>
     </div>
     <main>
-    <form method="POST" id="signIn">
+    <form method="POST" id="formulario">
       <input type="email" id="userEmail" placeholder="alguien@example.com" required="required"/>
       <input type="password" id="userPassword" placeholder="Contraseña" required="required"/>
-      <p id="errorMessage"></p>
       <button id="login">Inicia Sesion</button>
       <button id="googleLogin">Iniciar Sesion con Google</button>
       <p class="frase">¿No tienes una cuenta?</p>
@@ -38,8 +40,8 @@ export const Login = () => {
       .then(() => onNavigate('/wall'))
       .catch((error) => {
         // alert('error: Debes ingresar los datos ', error.message);
-        errorM.innerHTML = 'Usuario o contraseña no validos';
-        error;
+        errorM.innerHTML = error.message;
+        container.querySelector('#divError').style.display = 'block';
       });
     console.log('singning');
   });
