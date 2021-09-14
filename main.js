@@ -10,6 +10,8 @@ const routes = {
   '/register': Register,
 };
 
+const basePath = '/CDMX011-social-network';
+
 const dispatchRoute = (pathname = '/') => {
   const root = document.getElementById('root');
   const component = routes[pathname];
@@ -22,13 +24,15 @@ const dispatchRoute = (pathname = '/') => {
 });*/
 
 export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
-  window.history.pushState({}, pathname, window.location.origin + pathname);
-  dispatchRoute(pathname);
+  console.log(window.location.origin + basePath + pathname);
+  window.history.pushState({}, pathname, window.location.origin + basePath + pathname);
+  dispatchRoute(basePath+pathname);
 };
 
 // Mantener la sesión activa
 firebase.auth().onAuthStateChanged((user) => {
   console.log('1');
+  console.log('pathname', pathname);
   let pathname = window.location.pathname;
   if (user) {
     if (pathname === '/' || pathname === '/register') {

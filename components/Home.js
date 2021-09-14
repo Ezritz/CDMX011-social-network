@@ -11,7 +11,7 @@ export const Home = () => {
   if (currentUser.emailVerified) {
     html = `
     <header id="headerWall">
-    <img id="logoWall" src="./sweatshirt.png">
+    <img id="logoWall" src="./CDMX011-social-network/sweatshirt.png">
     <h2 class="titleWall">Trueque</h2>
     <a href="" id="exit">Cerrar Sesion</a>
     </header>
