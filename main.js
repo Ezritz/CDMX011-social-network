@@ -26,7 +26,7 @@ const dispatchRoute = (pathname = '/') => {
 export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
   console.log(window.location.origin + basePath + pathname);
   window.history.pushState({}, pathname, window.location.origin + basePath + pathname);
-  dispatchRoute(basePath+pathname);
+  dispatchRoute(pathname);
 };
 
 // Mantener la sesión activa
