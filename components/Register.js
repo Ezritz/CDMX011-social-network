@@ -8,7 +8,7 @@ export const Register = () => {
   <header></header>
   <div class="father">
     <div class="divChild">
-      <section><img src="sweatshirt.png" alt="Logo" id="logo"></section>
+      <section><img src="CDMX011-social-network/sweatshirt.png" alt="Logo" id="logo"></section>
       <h1 class="title">Trueque</h1>
       <p class="subtitle">La comunidad mas grande <br>
       de intercambio de ropa</p>
