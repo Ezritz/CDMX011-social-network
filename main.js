@@ -32,7 +32,7 @@ export const onNavigate = (pathname) => { // esta funcion es para activar el eve
 // Mantener la sesión activa
 firebase.auth().onAuthStateChanged((user) => {
   console.log('1');
-  console.log('pathname', pathname);
+
   let pathname = window.location.pathname;
   if (user) {
     if (pathname === '/' || pathname === '/register') {
