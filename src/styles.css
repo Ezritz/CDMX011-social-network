@@ -187,10 +187,25 @@ a {
   font-size: 18px;
   margin: 10px
 }
-
+.userName{
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: wrap;*/
+  background: #D8BA86;
+  border-radius: 13px;
+  border: none;
+  margin: 5px;
+  max-height: 250px;
+}
+#displayName {
+  white-space: nowrap;
+  text-decoration: underline;
+  align-items: flex-start;
+  
+}
 #contPub {
   display: flex;
-  justify-content: space-between;;
+  justify-content: space-between;
   background: #D8BA86;
   padding: 10px;
   font-size: 20px;
@@ -216,7 +231,7 @@ a {
   font-size: 18px;
   margin: 10px
 }
-#modalWindow {
+.modalWindow {
   display: none;
   position: fixed;
   z-index: 1;
@@ -226,7 +241,7 @@ a {
   background-color: rgba(0, 0, 0, 0.212);
 }
 
-#modalContainer {
+.modalContainer {
   margin: auto;
   position: relative;
   align-items: center;
@@ -243,7 +258,7 @@ span {
   font-size: 13px;
 }
 
-#closeModal {
+.closeModal {
   display: flex;
   text-align: right;
   margin-right: 10px;
@@ -282,6 +297,22 @@ span {
   border-radius: 10px;
   border: none;
   
+}
+
+#deleteBtnPost {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  width: 100px;
+  height: 20px;
+  border-radius: 10px;
+  border: none;
+  
+}
+#confirm{
+  text-align: center;
 }
 @keyframes modal{
   from {top: 0px;}

@@ -16,7 +16,7 @@ export const Home = () => {
     <a href="" id="exit">Cerrar Sesion</a>
     </header>
     <div class="father">
-      <h2 class="subtitle">Hola ${currentUser ? currentUser.email : ''}</h2> <br>
+      <h2 class="subtitle">Hola ${currentUser ? currentUser.displayName : ''}</h2> <br>
       <form method="POST" id="wallForm">
       <div id="toPostContainer">
         <input type="text" id="toPost" placeholder="Que deseas publicar hoy?">
@@ -25,6 +25,9 @@ export const Home = () => {
         </div>
       </div>
       </form>
+      <div id="divError">
+        <p id="errorMessage"></p>
+      </div>
       <div id="postContainer"></div>
       
     </div>`;
@@ -89,34 +92,78 @@ export const Home = () => {
       console.log(dataFire);
       console.log("alikes: ",dataFire.alikes.length);
       postContainer.innerHTML += `
-      <div id="contPub">
-        ${dataFire.post}
-        <div id="btnsContenedor">
-          <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
-          <img id="btnDelete" src="./eliminar.png" data-id='${dataFire.id}'>
-          <div class="likes">
-            <img id="like" src="./corazon.png" data-id='${dataFire.id}'>
-            <span id="counter">${dataFire.alikes.length}</span>
+      
+        <div class="userName">
+          <p id="displayName">${currentUser.displayName} </p>
+          <div id="contPub">
+            ${dataFire.post}
+            <div id="btnsContenedor">
+              <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
+              <img id="btnDelete" src="./eliminar.png" data-id='${dataFire.id}'>
+              <div class="likes">
+                <img id="like" src="./corazon.png" data-id='${dataFire.id}'>
+                <span id="counter">${dataFire.alikes.length}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
       
-      <div id="modalWindow">
-        <div id="modalContainer">
-          <div id="closeModal">
+      <div id="modalWindow" class="modalWindow">
+        <div class="modalContainer">
+          <div class="closeModal">
             <span class="close" id="closeX">&times;</span>
           </div>
           <input type="text" id="editInput">
           <button id="editBtnPost" data-id='${dataFire.id}'>Editar</button>
         </div>
+      </div>
+
+      <div id="modalDelete" class="modalWindow">
+        <div class="modalContainer">
+          <div class="closeModal">
+            <div id="confirmDelete">
+              <p id="confirm">Borrar publicación?</p>
+            </div>
+          <span class="close" id="closeDelete">&times;</span>
+        </div>
+        <div id="deleteDiv"></div>
+        <button id="deleteBtnPost" data-id='${dataFire.id}'>Borrar</button>
       </div>`;
 
-      const butDelete = document.querySelectorAll('#btnDelete');
-      butDelete.forEach((btn) => {
+      // const butDelete = document.querySelectorAll('#btnDelete');
+      
+      document.querySelectorAll('#btnDelete').forEach((btn) => {
         btn.addEventListener('click', (e) => {
-          e.preventDefault();
+          document.getElementById('modalDelete').style.display ='block';
+          const target = e.target; // delegacion de eventos
+          collection.doc(target.dataset.id)
+            .get()
+            .then((doc) => {
+              const dataDelete = doc.data();
+              document.getElementById('deleteDiv').innerHTML= dataDelete.post;
+            })
+            .catch((error) => {
+              errorMessage.innerHTML= error.message;
+              container.querySelector('#divError').style.display ='block';
+            })
+          document.getElementById('deleteBtnPost').addEventListener('click', (e) => {
+            const target = e.target;
+            collection.doc(target.dataset.id)
+            deleteDataFire(target.dataset.id)
+            .then(() => {
+
+            }).catch((error)=> {
+              errorMessage.innerHTML = error.message;
+              container.querySelector('#divError').style.display = 'block';
+            });
+          });
+
+          document.getElementById('closeDelete').addEventListener('click', () =>{
+            document.getElementById('modalDelete').style.display = 'none';
+          });
+          // e.preventDefault();
           console.log(e.target.dataset.id);
-          deleteDataFire(e.target.dataset.id);
+          // deleteDataFire(e.target.dataset.id);
         });
       });
 
@@ -150,7 +197,7 @@ export const Home = () => {
       document.querySelectorAll('#edit').forEach((btnE) => {
         btnE.addEventListener('click', (e) => {
           e.preventDefault();
-          document.getElementById('modalWindow').style.display ='block';
+          document.getElementById('modalWindow').style.display = 'block';
 
           const target = e.target;
           collection.doc(target.dataset.id)
