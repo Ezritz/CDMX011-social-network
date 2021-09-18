@@ -61,6 +61,7 @@ export const Home = () => {
     const post = document.querySelector('#toPost').value;
     const likes = 0;
     const alikes = [];
+    const autor = currentUser.displayName;
     if(post === ''){
       alert('No se permiten espacios vacíos');
     }
@@ -69,6 +70,7 @@ export const Home = () => {
         post,
         likes,
         alikes,
+        autor,
       })
       .then(() => {
         document.querySelector('#toPost').value = '';
@@ -94,7 +96,7 @@ export const Home = () => {
       postContainer.innerHTML += `
       
         <div class="userName">
-          <p id="displayName">${currentUser.displayName} </p>
+          <p id="displayName">${dataFire.autor} </p>
           <div id="contPub">
             ${dataFire.post}
             <div id="btnsContenedor">
