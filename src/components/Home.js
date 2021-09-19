@@ -4,10 +4,11 @@ import { onNavigate } from '../main.js';
 const db = firebase.firestore();
 export const Home = () => {
   const currentUser = getUser();
+  // const verification = currentUser.emailVerified;
   console.log('u: ', currentUser);
   const container = document.createElement('div');
   let html;
-  
+
   if (currentUser.emailVerified) {
     html = `
     <header id="headerWall">
@@ -31,8 +32,7 @@ export const Home = () => {
       <div id="postContainer"></div>
       
     </div>`;
-  }
-  else {
+  } else {
     verifyUser(currentUser);
     html = `
     <p>Enviamos una liga a tu correo para verificarlo</p>
@@ -46,53 +46,51 @@ export const Home = () => {
   container.querySelector('#exit').addEventListener('click', (e) => {
     e.preventDefault();
     signOut()
-    .then (() => {
-
-    })
-    .catch((error) =>{
-      alert('Error: ', error.message);
-    });
+      .then(() => {
+        // close sesion
+      })
+      .catch((error) => {
+        alert('Error: ', error.message);
+      });
     onNavigate('/');
   });
 
   // FIREBASE CONNECT
-  container.querySelector('#confirmPost').addEventListener('click', (e) => { //SEND POST TO FIREBASE
+  container.querySelector('#confirmPost').addEventListener('click', (e) => { // SEND POST TO FIREBASE
     e.preventDefault();
     const post = document.querySelector('#toPost').value;
     const likes = 0;
     const alikes = [];
     const autor = currentUser.displayName;
-    if(post === ''){
+    if (post === '') {
       alert('No se permiten espacios vacíos');
-    }
-    else{
+    } else {
       collection.add({
         post,
         likes,
         alikes,
         autor,
       })
-      .then(() => {
-        document.querySelector('#toPost').value = '';
-        console.log('Document succesfully written');
-      })
-      .catch((error) => {
-        console.log('Error writing: ', error.message)
-      });
+        .then(() => {
+          document.querySelector('#toPost').value = '';
+          console.log('Document succesfully written');
+        })
+        .catch((error) => {
+          console.log('Error writing: ', error.message);
+        });
     }
   });
 
   const postContainer = container.querySelector('#postContainer');
-  const deleteDataFire = id => db.collection('posts').doc(id).delete();
+  const deleteDataFire = (id) => db.collection('posts').doc(id).delete();
 
   collection.onSnapshot((querySnapshot) => { // PULL POST AND ADD IN REAL TIME
-    postContainer.innerHTML ='';
+    postContainer.innerHTML = '';
     querySnapshot.forEach((doc) => {
       const dataFire = doc.data();
-      
       dataFire.id = doc.id;
       console.log(dataFire);
-      console.log("alikes: ",dataFire.alikes.length);
+      console.log('alikes: ', dataFire.alikes.length);
       postContainer.innerHTML += `
       
         <div class="userName">
@@ -133,34 +131,35 @@ export const Home = () => {
       </div>`;
 
       // const butDelete = document.querySelectorAll('#btnDelete');
-      
       document.querySelectorAll('#btnDelete').forEach((btn) => {
         btn.addEventListener('click', (e) => {
-          document.getElementById('modalDelete').style.display ='block';
+          document.getElementById('modalDelete').style.display = 'block';
           const target = e.target; // delegacion de eventos
           collection.doc(target.dataset.id)
             .get()
-            .then((doc) => {
-              const dataDelete = doc.data();
-              document.getElementById('deleteDiv').innerHTML= dataDelete.post;
+            .then((docu) => {
+              const dataDelete = docu.data();
+              document.getElementById('deleteDiv').innerHTML = dataDelete.post;
             })
             .catch((error) => {
-              errorMessage.innerHTML= error.message;
-              container.querySelector('#divError').style.display ='block';
-            })
-          document.getElementById('deleteBtnPost').addEventListener('click', (e) => {
-            const target = e.target;
-            collection.doc(target.dataset.id)
-            deleteDataFire(target.dataset.id)
-            .then(() => {
-
-            }).catch((error)=> {
+              const errorMessage = document.getElementById('errorMessage');
               errorMessage.innerHTML = error.message;
               container.querySelector('#divError').style.display = 'block';
             });
+          document.getElementById('deleteBtnPost').addEventListener('click', (event) => {
+            const target2 = event.target;
+            collection.doc(target2.dataset.id);
+            deleteDataFire(target2.dataset.id)
+              .then(() => {
+
+              }).catch((error) => {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.innerHTML = error.message;
+                container.querySelector('#divError').style.display = 'block';
+              });
           });
 
-          document.getElementById('closeDelete').addEventListener('click', () =>{
+          document.getElementById('closeDelete').addEventListener('click', () => {
             document.getElementById('modalDelete').style.display = 'none';
           });
           // e.preventDefault();
@@ -174,25 +173,22 @@ export const Home = () => {
           console.log('like');
           const target = e.target;
           // const alikes = dataFire.alikes;
-          let docRef = collection.doc(target.dataset.id);
-          docRef.get().then((doc) => {
+          const docRef = collection.doc(target.dataset.id);
+          docRef.get().then((docum) => {
             console.log('doc alikes; ', doc.data().alikes);
-            if (!doc.data().alikes.includes(currentUser.email)){
-
+            if (!docum.data().alikes.includes(currentUser.email)) {
               docRef
-              .update({
-                alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
-              });
+                .update({
+                  alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
+                });
               console.log('+1 like');
-            }
-            else {
+            } else {
               docRef
-              .update({
-                alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
-              });
+                .update({
+                  alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
+                });
             }
-          })
-          
+          });
         });
       });
       // Post Edit
@@ -204,16 +200,16 @@ export const Home = () => {
           const target = e.target;
           collection.doc(target.dataset.id)
             .get()
-            //eslint-disable-next-line no-shadow
+            // eslint-disable-next-line no-shadow
             .then((doc) => {
               const dataEdit = doc.data();
               document.getElementById('editInput').value = dataEdit.post;
             })
             .catch((error) => {
-              console.log('error getting document: ',error.message);
+              console.log('error getting document: ', error.message);
             });
-          document.getElementById('editBtnPost').addEventListener('click',() => {
-            //eslint-disable-next-line no-shadow
+          document.getElementById('editBtnPost').addEventListener('click', () => {
+            // eslint-disable-next-line no-shadow
             const target = e.target;
             const post = document.querySelector('#editInput').value;
 
@@ -221,15 +217,15 @@ export const Home = () => {
               .update({
                 post,
               })
-              .then (() =>{
+              .then(() => {
                 console.log('Document succesfully Updated');
               })
               .catch((error) => {
-                console.log('Error updating document: ',error.message);
+                console.log('Error updating document: ', error.message);
               });
           });
 
-          document.getElementById('closeX').addEventListener('click', () =>{
+          document.getElementById('closeX').addEventListener('click', () => {
             document.getElementById('modalWindow').style.display = 'none';
           });
         });

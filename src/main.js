@@ -16,11 +16,6 @@ const dispatchRoute = (pathname = '/') => {
   render(root, component());
 };
 
-/* window.addEventListener('load', () => {
-  console.log('dispatch');
-  dispatchRoute(window.location.pathname);
-});*/
-
 export const onNavigate = (pathname) => { // esta funcion es para activar el evento click
   window.history.pushState({}, pathname, window.location.origin + pathname);
   dispatchRoute(pathname);
@@ -34,7 +29,7 @@ firebase.auth().onAuthStateChanged((user) => {
     if (pathname === '/' || pathname === '/register') {
       pathname = '/wall';
     }
-  }else{
+  } else {
     pathname = '/';
   }
   onNavigate(pathname);

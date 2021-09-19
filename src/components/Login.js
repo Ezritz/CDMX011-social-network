@@ -49,12 +49,11 @@ export const Login = () => {
   container.querySelector('#googleLogin').addEventListener('click', (e) => {
     e.preventDefault();
     googleRegister()
-    .then(() => onNavigate('/wall'))
-    .catch((error) => {
-      alert('error ', error);
-    });
+      .then(() => onNavigate('/wall'))
+      .catch((error) => {
+        alert('error ', error.message);
+      });
   });
-  
   container.querySelector('#registro').addEventListener('click', (e) => {
     e.preventDefault();
     onNavigate('/register');
