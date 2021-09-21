@@ -58,18 +58,17 @@ export const Home = () => {
   // FIREBASE CONNECT
   container.querySelector('#confirmPost').addEventListener('click', (e) => { // SEND POST TO FIREBASE
     e.preventDefault();
-    const post = document.querySelector('#toPost').value;
-    const likes = 0;
+    const content = document.querySelector('#toPost').value;
     const alikes = [];
     const autor = currentUser.displayName;
-    if (post === '') {
+    if (content === '') {
       alert('No se permiten espacios vacíos');
     } else {
       collection.add({
-        post,
-        likes,
+        content,
         alikes,
         autor,
+        // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
         .then(() => {
           document.querySelector('#toPost').value = '';
@@ -84,6 +83,7 @@ export const Home = () => {
   const postContainer = container.querySelector('#postContainer');
   const deleteDataFire = (id) => db.collection('posts').doc(id).delete();
 
+  // orderBy('timestamp)
   collection.onSnapshot((querySnapshot) => { // PULL POST AND ADD IN REAL TIME
     postContainer.innerHTML = '';
     querySnapshot.forEach((doc) => {
@@ -96,7 +96,7 @@ export const Home = () => {
         <div class="userName">
           <p id="displayName">${dataFire.autor} </p>
           <div id="contPub">
-            ${dataFire.post}
+            ${dataFire.content}
             <div id="btnsContenedor">
               <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
               <img id="btnDelete" src="./eliminar.png" data-id='${dataFire.id}'>
@@ -139,7 +139,7 @@ export const Home = () => {
             .get()
             .then((docu) => {
               const dataDelete = docu.data();
-              document.getElementById('deleteDiv').innerHTML = dataDelete.post;
+              document.getElementById('deleteDiv').innerHTML = dataDelete.content;
             })
             .catch((error) => {
               const errorMessage = document.getElementById('errorMessage');
@@ -148,10 +148,10 @@ export const Home = () => {
             });
           document.getElementById('deleteBtnPost').addEventListener('click', (event) => {
             const target2 = event.target;
-            collection.doc(target2.dataset.id);
+            // collection.doc(target2.dataset.id);
             deleteDataFire(target2.dataset.id)
               .then(() => {
-
+                console.log('Post succesfully deleted');
               }).catch((error) => {
                 const errorMessage = document.getElementById('errorMessage');
                 errorMessage.innerHTML = error.message;
@@ -201,27 +201,27 @@ export const Home = () => {
           collection.doc(target.dataset.id)
             .get()
             // eslint-disable-next-line no-shadow
-            .then((doc) => {
+            .then((doc) => { // show post
               const dataEdit = doc.data();
-              document.getElementById('editInput').value = dataEdit.post;
+              document.getElementById('editInput').value = dataEdit.content; // fill textbox with post content
             })
             .catch((error) => {
-              console.log('error getting document: ', error.message);
+              console.log('error getting post: ', error.message);
             });
           document.getElementById('editBtnPost').addEventListener('click', () => {
             // eslint-disable-next-line no-shadow
             const target = e.target;
-            const post = document.querySelector('#editInput').value;
+            const content = document.querySelector('#editInput').value;
 
             collection.doc(target.dataset.id)
               .update({
-                post,
+                content,
               })
               .then(() => {
-                console.log('Document succesfully Updated');
+                console.log('Post succesfully Updated');
               })
               .catch((error) => {
-                console.log('Error updating document: ', error.message);
+                console.log('Error updating Post: ', error.message);
               });
           });
 

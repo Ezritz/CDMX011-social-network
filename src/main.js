@@ -37,4 +37,5 @@ firebase.auth().onAuthStateChanged((user) => {
 
 window.addEventListener('popstate', () => {
   dispatchRoute(window.location.pathname);
+  console.log('aquipop');
 });
