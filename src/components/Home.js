@@ -43,194 +43,199 @@ export const Home = () => {
   const collection = db.collection('posts');
 
   // SIGN OUT
-  container.querySelector('#exit').addEventListener('click', (e) => {
-    e.preventDefault();
-    signOut()
-      .then(() => {
-        // close sesion
-      })
-      .catch((error) => {
-        alert('Error: ', error.message);
-      });
-    onNavigate('/');
-  });
-
-  // FIREBASE CONNECT
-  container.querySelector('#confirmPost').addEventListener('click', (e) => { // SEND POST TO FIREBASE
-    e.preventDefault();
-    const content = document.querySelector('#toPost').value;
-    const alikes = [];
-    const autor = currentUser.displayName;
-    if (content === '') {
-      alert('No se permiten espacios vacíos');
-    } else {
-      collection.add({
-        content,
-        alikes,
-        autor,
-        // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
+  if (currentUser.emailVerified) {
+    container.querySelector('#exit').addEventListener('click', (e) => {
+      e.preventDefault();
+      signOut()
         .then(() => {
-          document.querySelector('#toPost').value = '';
-          console.log('Document succesfully written');
+          // close sesion
         })
         .catch((error) => {
-          console.log('Error writing: ', error.message);
+          alert('Error: ', error.message);
         });
-    }
-  });
+      onNavigate('/');
+    });
+
+    // FIREBASE CONNECT
+    container.querySelector('#confirmPost').addEventListener('click', (e) => { // SEND POST TO FIREBASE
+      e.preventDefault();
+      const content = document.querySelector('#toPost').value;
+      const alikes = [];
+      const autor = currentUser.displayName;
+      if (content === '') {
+        alert('No se permiten espacios vacíos');
+      } else {
+        collection.add({
+          content,
+          alikes,
+          autor,
+          // timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+          .then(() => {
+            document.querySelector('#toPost').value = '';
+            console.log('Document succesfully written');
+          })
+          .catch((error) => {
+            console.log('Error writing: ', error.message);
+          });
+      }
+    });
+  };
 
   const postContainer = container.querySelector('#postContainer');
   const deleteDataFire = (id) => db.collection('posts').doc(id).delete();
 
   // orderBy('timestamp)
-  collection.onSnapshot((querySnapshot) => { // PULL POST AND ADD IN REAL TIME
-    postContainer.innerHTML = '';
-    querySnapshot.forEach((doc) => {
-      const dataFire = doc.data();
-      dataFire.id = doc.id;
-      console.log(dataFire);
-      console.log('alikes: ', dataFire.alikes.length);
-      postContainer.innerHTML += `
-      
-        <div class="userName">
-          <p id="displayName">${dataFire.autor} </p>
-          <div id="contPub">
-            ${dataFire.content}
-            <div id="btnsContenedor">
-              <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
-              <img id="btnDelete" src="./eliminar.png" data-id='${dataFire.id}'>
-              <div class="likes">
-                <img id="like" src="./corazon.png" data-id='${dataFire.id}'>
-                <span id="counter">${dataFire.alikes.length}</span>
+  if(currentUser.emailVerified) {
+    collection.onSnapshot((querySnapshot) => { // PULL POST AND ADD IN REAL TIME
+      postContainer.innerHTML = '';
+      querySnapshot.forEach((doc) => {
+        const dataFire = doc.data();
+        dataFire.id = doc.id;
+        console.log(dataFire);
+        console.log('alikes: ', dataFire.alikes.length);
+        postContainer.innerHTML += `
+        
+          <div class="userName">
+            <p id="displayName">${dataFire.autor} </p>
+            <div id="contPub">
+              ${dataFire.content}
+              <div id="btnsContenedor">
+                <a href="" id="edit" class="links" data-id='${dataFire.id}'>Editar</a>
+                <img id="btnDelete" src="./eliminar.png" data-id='${dataFire.id}'>
+                <div class="likes">
+                  <img id="like" src="./corazon.png" data-id='${dataFire.id}'>
+                  <span id="counter">${dataFire.alikes.length}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      
-      <div id="modalWindow" class="modalWindow">
-        <div class="modalContainer">
-          <div class="closeModal">
-            <span class="close" id="closeX">&times;</span>
-          </div>
-          <input type="text" id="editInput">
-          <button id="editBtnPost" data-id='${dataFire.id}'>Editar</button>
-        </div>
-      </div>
-
-      <div id="modalDelete" class="modalWindow">
-        <div class="modalContainer">
-          <div class="closeModal">
-            <div id="confirmDelete">
-              <p id="confirm">Borrar publicación?</p>
+        
+        <div id="modalWindow" class="modalWindow">
+          <div class="modalContainer">
+            <div class="closeModal">
+              <span class="close" id="closeX">&times;</span>
             </div>
-          <span class="close" id="closeDelete">&times;</span>
+            <input type="text" id="editInput">
+            <button id="editBtnPost" data-id='${dataFire.id}'>Editar</button>
+          </div>
         </div>
-        <div id="deleteDiv"></div>
-        <button id="deleteBtnPost" data-id='${dataFire.id}'>Borrar</button>
-      </div>`;
 
-      // const butDelete = document.querySelectorAll('#btnDelete');
-      document.querySelectorAll('#btnDelete').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          document.getElementById('modalDelete').style.display = 'block';
-          const target = e.target; // delegacion de eventos
-          collection.doc(target.dataset.id)
-            .get()
-            .then((docu) => {
-              const dataDelete = docu.data();
-              document.getElementById('deleteDiv').innerHTML = dataDelete.content;
-            })
-            .catch((error) => {
-              const errorMessage = document.getElementById('errorMessage');
-              errorMessage.innerHTML = error.message;
-              container.querySelector('#divError').style.display = 'block';
-            });
-          document.getElementById('deleteBtnPost').addEventListener('click', (event) => {
-            const target2 = event.target;
-            // collection.doc(target2.dataset.id);
-            deleteDataFire(target2.dataset.id)
-              .then(() => {
-                console.log('Post succesfully deleted');
-              }).catch((error) => {
+        <div id="modalDelete" class="modalWindow">
+          <div class="modalContainer">
+            <div class="closeModal">
+              <div id="confirmDelete">
+                <p id="confirm">Borrar publicación?</p>
+              </div>
+            <span class="close" id="closeDelete">&times;</span>
+          </div>
+          <div id="deleteDiv"></div>
+          <button id="deleteBtnPost" data-id='${dataFire.id}'>Borrar</button>
+        </div>`;
+
+        // const butDelete = document.querySelectorAll('#btnDelete');
+        document.querySelectorAll('#btnDelete').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            document.getElementById('modalDelete').style.display = 'block';
+            const target = e.target; // delegacion de eventos
+            collection.doc(target.dataset.id)
+              .get()
+              .then((docu) => {
+                const dataDelete = docu.data();
+                document.getElementById('deleteDiv').innerHTML = dataDelete.content;
+              })
+              .catch((error) => {
                 const errorMessage = document.getElementById('errorMessage');
                 errorMessage.innerHTML = error.message;
                 container.querySelector('#divError').style.display = 'block';
               });
-          });
-
-          document.getElementById('closeDelete').addEventListener('click', () => {
-            document.getElementById('modalDelete').style.display = 'none';
-          });
-          // e.preventDefault();
-          console.log(e.target.dataset.id);
-          // deleteDataFire(e.target.dataset.id);
-        });
-      });
-
-      document.querySelectorAll('#like').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          console.log('like');
-          const target = e.target;
-          // const alikes = dataFire.alikes;
-          const docRef = collection.doc(target.dataset.id);
-          docRef.get().then((docum) => {
-            console.log('doc alikes; ', doc.data().alikes);
-            if (!docum.data().alikes.includes(currentUser.email)) {
-              docRef
-                .update({
-                  alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
+            document.getElementById('deleteBtnPost').addEventListener('click', (event) => {
+              const target2 = event.target;
+              // collection.doc(target2.dataset.id);
+              deleteDataFire(target2.dataset.id)
+                .then(() => {
+                  console.log('Post succesfully deleted');
+                }).catch((error) => {
+                  const errorMessage = document.getElementById('errorMessage');
+                  errorMessage.innerHTML = error.message;
+                  container.querySelector('#divError').style.display = 'block';
                 });
-              console.log('+1 like');
-            } else {
-              docRef
-                .update({
-                  alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
-                });
-            }
-          });
-        });
-      });
-      // Post Edit
-      document.querySelectorAll('#edit').forEach((btnE) => {
-        btnE.addEventListener('click', (e) => {
-          e.preventDefault();
-          document.getElementById('modalWindow').style.display = 'block';
-
-          const target = e.target;
-          collection.doc(target.dataset.id)
-            .get()
-            // eslint-disable-next-line no-shadow
-            .then((doc) => { // show post
-              const dataEdit = doc.data();
-              document.getElementById('editInput').value = dataEdit.content; // fill textbox with post content
-            })
-            .catch((error) => {
-              console.log('error getting post: ', error.message);
             });
-          document.getElementById('editBtnPost').addEventListener('click', () => {
-            // eslint-disable-next-line no-shadow
-            const target = e.target;
-            const content = document.querySelector('#editInput').value;
 
+            document.getElementById('closeDelete').addEventListener('click', () => {
+              document.getElementById('modalDelete').style.display = 'none';
+            });
+            // e.preventDefault();
+            console.log(e.target.dataset.id);
+            // deleteDataFire(e.target.dataset.id);
+          });
+        });
+
+        document.querySelectorAll('#like').forEach((btn) => {
+          btn.addEventListener('click', (e) => {
+            console.log('like');
+            const target = e.target;
+            // const alikes = dataFire.alikes;
+            const docRef = collection.doc(target.dataset.id);
+            docRef.get().then((docum) => {
+              console.log('doc alikes; ', doc.data().alikes);
+              if (!docum.data().alikes.includes(currentUser.email)) {
+                docRef
+                  .update({
+                    alikes: firebase.firestore.FieldValue.arrayUnion(currentUser.email),
+                  });
+                console.log('+1 like');
+              } else {
+                docRef
+                  .update({
+                    alikes: firebase.firestore.FieldValue.arrayRemove(currentUser.email),
+                  });
+              }
+            });
+          });
+        });
+        // Post Edit
+        document.querySelectorAll('#edit').forEach((btnE) => {
+          btnE.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('modalWindow').style.display = 'block';
+
+            const target = e.target;
             collection.doc(target.dataset.id)
-              .update({
-                content,
-              })
-              .then(() => {
-                console.log('Post succesfully Updated');
+              .get()
+              // eslint-disable-next-line no-shadow
+              .then((doc) => { // show post
+                const dataEdit = doc.data();
+                document.getElementById('editInput').value = dataEdit.content; // fill textbox with post content
               })
               .catch((error) => {
-                console.log('Error updating Post: ', error.message);
+                console.log('error getting post: ', error.message);
               });
-          });
+            document.getElementById('editBtnPost').addEventListener('click', () => {
+              // eslint-disable-next-line no-shadow
+              const target = e.target;
+              const content = document.querySelector('#editInput').value;
 
-          document.getElementById('closeX').addEventListener('click', () => {
-            document.getElementById('modalWindow').style.display = 'none';
+              collection.doc(target.dataset.id)
+                .update({
+                  content,
+                })
+                .then(() => {
+                  console.log('Post succesfully Updated');
+                })
+                .catch((error) => {
+                  console.log('Error updating Post: ', error.message);
+                });
+            });
+
+            document.getElementById('closeX').addEventListener('click', () => {
+              document.getElementById('modalWindow').style.display = 'none';
+            });
           });
         });
       });
     });
-  });
+    
+  };
   return container;
 };
